@@ -13,9 +13,10 @@ J = 0;
 % Instructions: Compute the cost of a particular choice of theta
 %               You should set J to the cost.
 
-
-
-
+% vectorilization version
+y_hat = X * theta;
+err = y_hat - y;
+J = sum(err.^2)/2/m;
 
 % =========================================================================
 
