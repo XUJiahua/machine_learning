@@ -17,11 +17,13 @@ for iter = 1:num_iters
     %       of the cost function (computeCost) and gradient here.
     %
 
-
-
-
-
-
+    % vectorilization version
+    % y_hat: (m, 1) = (m, n) * (n, 1)
+    y_hat = X * theta;
+    % diff: (m, 1) = (m, 1) - (m, 1)
+    err = y_hat - y;
+    % theta: (n, 1) = (n, 1) - (n, m) * (m, 1) 
+    theta = theta - alpha / m * transpose(X) * err;
 
     % ============================================================
 
