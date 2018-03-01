@@ -62,25 +62,49 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% (m, 400+1)
+X = [ones(m, 1) X];
+% (m, 25)
+z2 = X * transpose(Theta1);
+% (m, 25)
+a2 = sigmoid(z2);
 
+% (m, 25+1)
+a2 = [ones(m, 1) a2];
+% (m, 10) = (m, 26) * (26, 10)
+z3 = a2 * transpose(Theta2);
+% (m, 10)
+a3 = sigmoid(z3);
+y_hat = a3;
 
+y_ = zeros(m, num_labels);
+for i = 1:m
+    y_(i, y(i)) = 1;
+end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+tmp = -1 * y_.*log(y_hat) - (1-y_).*log(1-y_hat);
+% ignore bias parameter, remove first column
+t1 = Theta1;
+t1(:, 1) = 0;
+t2 = Theta2;
+t2(:, 1) = 0;
+tmp2 = [t1(:) ; t2(:)];
+J = sum(tmp(:))/m + lambda / 2/ m * sum(tmp2.^2);
 
 % -------------------------------------------------------------
+% (m, 10)
+err3 = y_hat - y_;
+
+% (m, 25) = (m, 10) * (10, 26-1) .* (m, 25)
+err2 = err3 * Theta2(:, 2:end) .*sigmoidGradient(z2);
+
+% (10, 26) = (10, m) * (m, 25+1) 
+delta2 = transpose(err3) * a2;
+% (25, 401) = (25, m) * (m, 400+1)
+delta1 = transpose(err2) * X;
+
+Theta1_grad = delta1/m + lambda/m * t1;
+Theta2_grad = delta2/m + lambda/m * t2;
 
 % =========================================================================
 
